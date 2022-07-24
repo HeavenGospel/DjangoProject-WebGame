@@ -1,5 +1,8 @@
 class AcGame {
-    constructor(id) (
-    )
+    constructor(id) {
+        this.id = id;
+        this.$ac_game = $('#' + id);
+        this.menu = new AcGameMenu(this);
+    }
 }
 
