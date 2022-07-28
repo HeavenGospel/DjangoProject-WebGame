@@ -12,7 +12,7 @@ class AcGameMenu{
             多人模式
         </div>
         <br>
-        <div class="ac-game-menu-field-item ac-game-field-item-settings">
+        <div class="ac-game-menu-field-item ac-game-menu-field-item-settings">
             设置
         </div>
     </div>
@@ -49,6 +49,6 @@ class AcGameMenu{
     }
 
     hide() { //关闭menu界面
-        this.$menu.hied();
+        this.$menu.hide();
     }
 }

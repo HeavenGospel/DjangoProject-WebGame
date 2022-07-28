@@ -16,7 +16,7 @@ class  AcGamePlayground {
         this.$playground.show();
     }
 
-    hied(){
+    hide(){
         this.$playground.hide();
     }
 }
