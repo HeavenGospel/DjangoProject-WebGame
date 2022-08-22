@@ -34,16 +34,17 @@ class  AcGamePlayground {
     }
 
     show(){
+        let scale = this.scale
         this.$playground.show();
 
         this.resize();
 
         this.game_map = new GameMap(this);
         this.players = [];
-        this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
+        this.players.push(new Player(this, this.width / 2 / scale, 0.5, 0.05, "white", 0.15, true));
 
         for(let i = 0; i < 5; i ++ ){
-            this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, this.get_random_color(), this.height * 0.15, false));
+            this.players.push(new Player(this, this.width / 2 / scale, 0.5, 0.05, this.get_random_color(), 0.15, false));
         }
 
     }
