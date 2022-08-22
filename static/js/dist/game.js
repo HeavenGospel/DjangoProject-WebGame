@@ -122,6 +122,13 @@ class GameMap extends AcGameObject {
     start() {
     }
 
+    resize() {
+        this.ctx.canvas.width = this.playground.width;
+        this.ctx.canvas.height = this.playground.height;
+        this.ctx.fillStyle = "rgba(0, 0, 0, 1)";
+        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    }
+
     update() {
         this.render();
     }
@@ -421,6 +428,8 @@ class  AcGamePlayground {
 
         this.hide();
 
+        this.root.$ac_game.append(this.$playground);
+
         this.start();
     }
 
@@ -429,13 +438,29 @@ class  AcGamePlayground {
         return colors[Math.floor(Math.random() * 7)];
     }
     start(){
+        let outer = this;
+        $(window).resize(function() {
+            outer.resize();
+        });
+    }
+
+    resize() {
+        console.log("resize the window");
+        this.width = this.$playground.width();
+        this.height = this.$playground.height();
+        let unit = Math.min(this.width / 16, this.height / 9);
+        this.width = unit * 16;
+        this.height = unit * 9;
+        this.scale = this.height;
+
+        if(this.game_map) this.game_map.resize();
     }
 
     show(){
         this.$playground.show();
-        this.root.$ac_game.append(this.$playground);
-        this.width = this.$playground.width();
-        this.height = this.$playground.height();
+
+        this.resize();
+
         this.game_map = new GameMap(this);
         this.players = [];
         this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
