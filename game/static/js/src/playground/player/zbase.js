@@ -32,7 +32,7 @@ class Player extends AcGameObject {
             this.add_listening_events();
         } else {
             let tx = Math.random() * this.playground.width / this.playground.scale;
-            let ty = Math.random() * this.playground.height / this.playground.scale;
+            let ty = Math.random();
             this.move_to(tx, ty);
         }
     }
@@ -46,7 +46,7 @@ class Player extends AcGameObject {
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if (e.which === 3) {
                 outer.move_to((e.clientX - rect.left) / outer.playground.scale, (e.clientY - rect.top) / outer.playground.scale);
-            } else if (outer.spent_time > 4 && e.which === 1 && outer.radius >= 10) {
+            } else if (outer.spent_time > 4 && e.which === 1 && outer.radius >= outer.eps) {
                 if (outer.cur_skill === "fireball") {  // q
                     outer.shoot_fireball((e.clientX - rect.left) / outer.playground.scale, (e.clientY - rect.top) / outer.playground.scale);
                 }
@@ -115,7 +115,7 @@ class Player extends AcGameObject {
         this.render();
     }
 
-    update_move() {  // 更新玩家移动
+    update_move() {
         this.spent_time += this.timedelta / 1000;
         if(!this.is_me && this.spent_time > 4 && Math.random() < 1 / 300.0) {
             let player = this.playground.players[0];
@@ -136,7 +136,7 @@ class Player extends AcGameObject {
                 this.vx = this.vy = 0;
                 if(!this.is_me) {
                     let tx = Math.random() * this.playground.width / this.playground.scale;
-                    let ty = Math.random() * this.playground.height / this.playground.scale;
+                    let ty = Math.random();
                     this.move_to(tx, ty);
                 }
             } else {
