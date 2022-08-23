@@ -152,7 +152,7 @@ class Particle extends AcGameObject {
         this.color = color;
         this.speed = speed;
         this.friction = 0.9;
-        this.eps = 1;
+        this.eps = 0.01;
         this.move_length = move_length;
     }
 
@@ -176,8 +176,9 @@ class Particle extends AcGameObject {
     }
 
     render() {
+        let scale = this.playground.scale;
         this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
     }
@@ -309,7 +310,7 @@ class Player extends AcGameObject {
             this.shoot_fireball(tx, ty);
             //this.shoot_fireball(player.x, player.y);
         }
-        if (this.damage_speed > 10) {
+        if (this.damage_speed > this.eps) {
             this.vx = this.vy = this.move_length = 0;
             this.x += this.damage_x * this.damage_speed * this.timedelta / 1000;
             this.y += this.damage_y * this.damage_speed * this.timedelta / 1000;
@@ -373,7 +374,7 @@ class FireBall extends AcGameObject {
         this.color = color;
         this.speed = speed;
         this.move_length = move_length;
-        this.eps = 0.1;
+        this.eps = 0.01;
         this.damage = damage;
     }z
 
@@ -420,8 +421,9 @@ class FireBall extends AcGameObject {
     }
 
     render() {
+        let scale = this.playground.scale;
         this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+        this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
         this.ctx.fillStyle = this.color;
         this.ctx.fill();
     }

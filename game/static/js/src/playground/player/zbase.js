@@ -125,7 +125,7 @@ class Player extends AcGameObject {
             this.shoot_fireball(tx, ty);
             //this.shoot_fireball(player.x, player.y);
         }
-        if (this.damage_speed > 10) {
+        if (this.damage_speed > this.eps) {
             this.vx = this.vy = this.move_length = 0;
             this.x += this.damage_x * this.damage_speed * this.timedelta / 1000;
             this.y += this.damage_y * this.damage_speed * this.timedelta / 1000;
