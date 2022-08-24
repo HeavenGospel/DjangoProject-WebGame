@@ -31,6 +31,9 @@ class Player extends AcGameObject {
 
         if(this.character === "me") {
             this.fireball_coldtime = 3;  // 冷却时间,单位:秒
+            this.fireball_img = new Image();
+            this.fireball_img.src = "https://cdn.acwing.com/media/article/image/2021/12/02/1_9340c86053-fireball.png";
+
         }
     }
 
@@ -113,6 +116,7 @@ class Player extends AcGameObject {
         let fireball = new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, 0.01);
         this.fireballs.push(fireball);
 
+        this.fireball_coldtime = 3;
         return fireball;
     }
 
@@ -183,8 +187,6 @@ class Player extends AcGameObject {
     update_coldtime() {
         this.fireball_coldtime -= this.timedelta / 1000;
         this.fireball_coldtime = Math.max(0, this.fireball_coldtime);
-
-        console.log(this.fireball_coldtime);
     }
 
     update_move() {
@@ -234,6 +236,32 @@ class Player extends AcGameObject {
             this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
             this.ctx.fillStyle = this.color;
             this.ctx.fill();
+        }
+
+        if(this.character === "me" && this.playground.state === "fighting") {
+            this.render_skill_coldtime();
+        }
+    }
+
+    render_skill_coldtime() {
+        let x = 1.5, y = 0.9, r = 0.04;
+
+        let scale = this.playground.scale;
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.arc(x * scale, y * scale, r * scale, 0, Math.PI * 2, false);
+        this.ctx.stroke();
+        this.ctx.clip();
+        this.ctx.drawImage(this.fireball_img, (x - r) * scale, (y - r) * scale, r * 2 * scale, r * 2 * scale);  // 画技能图案
+        this.ctx.restore();
+
+        if(this.fireball_coldtime > 0) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x * scale, y * scale);
+        this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI  / 2, Math.PI * 2 * (1 - this.fireball_coldtime / 3) - Math.PI / 2, true);
+        this.ctx.lineTo(x * scale, y * scale);
+        this.ctx.fillStyle = "rgba(157, 147, 153, 0.7)";
+        this.ctx.fill();
         }
     }
 
