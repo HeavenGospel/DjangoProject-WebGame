@@ -28,9 +28,21 @@ class Player extends AcGameObject {
         this.img = new Image();
         this.img.src = this.photo;
         }
+
+        if(this.character === "me") {
+            this.fireball_coldtime = 3;  // 冷却时间,单位:秒
+        }
     }
 
     start() {
+        this.playground.player_count ++ ;
+        this.playground.notice_board.write("已就绪: " + this.playground.player_count + "人");
+
+        if(this.playground.player_count >= 3) {
+            this.playground.state = "fighting";
+            this.playground.notice_board.write("Fighting");
+        }
+
         if (this.character === "me"){
             this.add_listening_events();
         } else if (this.character === "robot") {
@@ -46,6 +58,9 @@ class Player extends AcGameObject {
             return false;
         });
         this.playground.game_map.$canvas.mousedown(function(e) {
+            if(outer.playground.state !== "fighting")
+                return false;
+
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if (e.which === 3) {
                 let tx = (e.clientX - rect.left) / outer.playground.scale;
@@ -55,7 +70,10 @@ class Player extends AcGameObject {
                 if(outer.playground.mode === "multi mode") {
                     outer.playground.mps.send_move_to(tx, ty);
                 }
-            } else if (outer.spent_time > 4 && e.which === 1 && outer.radius >= outer.eps) {
+            } else if (e.which === 1 && outer.radius >= outer.eps) {
+                if(outer.fireball_coldtime > outer.eps)
+                    return false;
+
                 let tx = (e.clientX - rect.left) / outer.playground.scale;
                 let ty = (e.clientY - rect.top) / outer.playground.scale;
                 if (outer.cur_skill === "fireball") {  // q
@@ -71,6 +89,12 @@ class Player extends AcGameObject {
         });
 
         $(window).keydown(function(e) {
+            if(outer.playground.state !== "fighting")
+                return false;
+
+            if(outer.fireball_coldtime > outer.eps) 
+                return false;
+
             if(e.which === 81) {
                 outer.cur_skill = "fireball";
                 return false;
@@ -146,12 +170,24 @@ class Player extends AcGameObject {
     }
 
     update() {
+        this.spent_time += this.timedelta / 1000;
+
+        if(this.character === "me" && this.playground.state === "fighting") {
+        this.update_coldtime();
+        }
         this.update_move();
+
         this.render();
     }
 
+    update_coldtime() {
+        this.fireball_coldtime -= this.timedelta / 1000;
+        this.fireball_coldtime = Math.max(0, this.fireball_coldtime);
+
+        console.log(this.fireball_coldtime);
+    }
+
     update_move() {
-        this.spent_time += this.timedelta / 1000;
         if(this.character === "robot" && this.spent_time > 4 && Math.random() < 1 / 300.0) {
             let player = this.playground.players[0];
             //let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
