@@ -35,10 +35,12 @@ class  AcGamePlayground {
     show(mode){
         let outer = this;
         this.$playground.show();
+        this.game_map = new GameMap(this);
+
+        this.mode = mode;
 
         this.resize();
 
-        this.game_map = new GameMap(this);
         this.players = [];
         this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, "white", 0.15, "me", this.root.settings.username, this.root.settings.photo));
 
