@@ -65,7 +65,7 @@ class Player extends AcGameObject {
         });
         this.playground.game_map.$canvas.mousedown(function(e) {
             if(outer.playground.state !== "fighting")
-                return false;
+                return true;  // 如果return false会把事件阻断掉,如果不处理我们应该把信息往上传递
 
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if (e.which === 3) {
@@ -101,7 +101,17 @@ class Player extends AcGameObject {
             }
         });
 
-        $(window).keydown(function(e) {
+        this.playground.game_map.$canvas.keydown(function(e) {
+            if(e.which === 13) {  // enter键
+                if(outer.playground.mode === "multi mode") {
+                    outer.playground.chat_field.show_input();  // 打开聊天框
+                    return false;
+                }
+            } else if(e.which === 27) {  // esc键
+                if(outer.playground.mode === "multi mode") {
+                    outer.playground.chat_field.hide_input();  // 关闭聊天框
+                }
+            }
             if(outer.playground.state !== "fighting")
                 return true;  // 不会让按键失效
             if(e.which === 81) {
